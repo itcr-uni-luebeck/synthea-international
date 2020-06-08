@@ -1,0 +1,6 @@
+the file destatis_auszug_gv2q_2020-06-30.xlsx was taken from:
+https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/_inhalt.html
+
+navigate to "Regionale Gliederung" -> "Quartalsausgabe" -> 30.06.2020 (EXCEL-Format)"
+
+Download Link: https://www.destatis.de/DE/Themen/Laender-Regionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugQ/AuszugGV2QAktuell.xlsx?__blob=publicationFile
