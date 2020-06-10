@@ -1,0 +1,8 @@
+https://www-genesis.destatis.de/genesis//online?operation=table&code=12411-0012
+
+Table name in the genesis system: "Bevölkerung: Bundesländer, Stichtag, Altersjahre"
+
+This tables gives (estimated) populations counts per state/bundesland, based on the 2011 census, by year.
+The data was retrieved on 2020-06-10, with the most current data available being from 2018-12-31.
+
+Rows and columns were flipped, so that the states are in the rows, with the age years in the columns.

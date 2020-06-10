@@ -2,36 +2,39 @@ import csv
 import re
 import numpy as np, numpy.random
 
-zip_header = ["", "USPS", "ST", "NAME", "ZCTA5", "LAT", "LON"]
-demographics_ethnic_group_header = ["WHITE", "HISPANIC", "BLACK", "ASIAN", "NATIVE", "OTHER"]
-demographics_age_group_header = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"]
-demographics_income_group_header = ["00..10", "10..15", "15..25", "25..35", "35..50", "50..75", "75..100", "100..150", "150..200", "200..999"]
-demographics_education_group_header = ["LESS_THAN_HS", "HS_DEGREE", "SOME_COLLEGE", "BS_DEGREE"]
-demographics_header = ["ID", "COUNTY", "NAME", "STNAME", "POPESTIMATE2015", "CTYNAME", "TOT_POP", "TOT_MALE", "TOT_FEMALE"] + \
-    demographics_ethnic_group_header + demographics_age_group_header + demographics_income_group_header + demographics_education_group_header
-
 def build_multiremove_pattern(subs):
     "Simultaneously perform all substitutions on the subject string, adapted https://stackoverflow.com/a/765835"
     return '|'.join(f'({p})' for p in subs)
 
-
-remove_city_name_parts = list([f", ({s})" for s in [".*[Ss]tadt",
-                                                    "(gemfr.|gemeindefreies) (Gebiet|Geb.|Bezirk)",
-                                                    "Flecken|Marktflecken",
-                                                    "Kurort",
-                                                    "(Insel|Markt|Burg|Kloster|Nationalpark|Senne)gemeinde",
-                                                    "(St|M|GKSt)"]])
-remove_city_name_parts_pattern = build_multiremove_pattern(
-    remove_city_name_parts)
-
 def generate_random_demographics(keys):
+    """generate entirely random demographics summing up to one, for the provided keys"""
     random_values = np.random.dirichlet(np.ones(len(keys)), size=1).tolist()[0]
     demographics = {k : v for k, v in zip(keys, random_values)}
     return demographics
 
 
 def remove_gemeindename_parts(gemeindename):
+    """remove parts from the gemeindename that are not desired in the output,
+    for example 'Stadt' or 'Marktflecken'"""
     return re.sub(remove_city_name_parts_pattern, "", gemeindename)
+
+def read_population_statistics(age_group_header, representation='list'):
+    def parse_row(row):
+        if representation == 'array' or representation=="numpy":
+            return np.array([float(row[k]) for k in age_group_header])
+        elif representation == 'dict':
+            return {k : float(row[k]) for k in age_group_header}
+        else:
+            return [float(row[k]) for k in age_group_header]
+    with open("../data/destatis_12411-0012_aufbereitung.CSV", "r", encoding="utf8") as pop_file:
+        csv_data = csv.DictReader(pop_file, delimiter=",")
+        pop_data = {row["Bundesland"] : parse_row(row) for row in csv_data}
+        return pop_data
+
+def warp_population_statistics(population_statistics, bundesland_name, jitter=0.1):
+    stat = population_statistics[bundesland_name]
+
+    return
 
 
 def bundeslandLookup(bundesland_key):
@@ -54,10 +57,49 @@ def bundeslandLookup(bundesland_key):
         "16": ("Thüringen", "TH")
     }.get(bundesland_key, "")
 
+def parse_to_number(data : str, to_int=True):
+    data = data.replace(" ", "").replace(",", ".").strip()
+    if to_int:
+        return int(data)
+    else:
+        return float(data)
+
+def generate_population_demographics(row):
+    total = parse_to_number(row["Bevoelkerung_Gesamt"])
+
+    male_abs = parse_to_number(row["Bevoelkerung_Maennlich"])
+    male_rel = float(male_abs) / float(total)
+    female_abs = parse_to_number(row["Bevoelkerung_Weiblich"])
+    female_rel = float(female_abs) / float(total)
+
+    return {
+        "POPESTIMATE2015": total,
+        "TOT_POP": total,
+        "TOT_MALE": male_rel,
+        "TOT_FEMALE": female_rel
+    }
+
+zip_header = ["", "USPS", "ST", "NAME", "ZCTA5", "LAT", "LON"]
+demographics_ethnic_group_header = ["WHITE", "HISPANIC", "BLACK", "ASIAN", "NATIVE", "OTHER"]
+demographics_age_group_header = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"]
+demographics_income_group_header = ["00..10", "10..15", "15..25", "25..35", "35..50", "50..75", "75..100", "100..150", "150..200", "200..999"]
+demographics_education_group_header = ["LESS_THAN_HS", "HS_DEGREE", "SOME_COLLEGE", "BS_DEGREE"]
+demographics_header = ["ID", "COUNTY", "NAME", "STNAME", "POPESTIMATE2015", "CTYNAME", "TOT_POP", "TOT_MALE", "TOT_FEMALE"] + \
+    demographics_ethnic_group_header + demographics_age_group_header + demographics_income_group_header + demographics_education_group_header
+
+remove_city_name_parts_pattern = build_multiremove_pattern([f", ({s})" for s in [".*[Ss]tadt",
+                                                    "(gemfr.|gemeindefreies) ?(Gebiet|Geb.|Bezirk)",
+                                                    "Flecken|Marktflecken",
+                                                    "Kurort",
+                                                    "(Insel|Markt|Burg|Kloster|Nationalpark|Senne)gemeinde",
+                                                    "(St|M|GKSt)"]])
+
+population_statistics_numpy = read_population_statistics(demographics_age_group_header, representation="numpy")
+population_statistics_dict = read_population_statistics(demographics_age_group_header, representation="dict")
 
 with open("../data/destatis_auszug_gv2q_2020-06-30.csv", mode='r', encoding="utf8") as source_file, \
-        open("../src/main/resources/geography/zipcodes.csv", mode='w', newline='') as zipcode_file, \
-        open("../src/main/resources/geography/demographics.csv", mode='w', newline='') as demographics_file:
+        open("../src/main/resources/geography/zipcodes.csv", mode='w', newline='', encoding="utf8") as zipcode_file, \
+        open("../src/main/resources/geography/demographics.csv", mode='w', newline='', encoding="utf8") as demographics_file:
 
     source_reader = csv.DictReader(source_file, delimiter=',')
     zip_writer = csv.DictWriter(
@@ -70,9 +112,14 @@ with open("../data/destatis_auszug_gv2q_2020-06-30.csv", mode='r', encoding="utf
 
     line_count = 0
     for i, row in enumerate(source_reader):
-        if (not row["Gem"]):  # we only care about proper Gemeinden
+        if not row["Gem"]:  # we only care about proper Gemeinden
             # skip Bundesländer
             continue
+        if row["Bevoelkerung_Gesamt"].strip() == "0" :
+            # there are some officially uninhabited areas in DE,
+            # for example Sachsenwald, SH
+            continue
+
         bundesland_key = row["Land"]
         bundesland_name, bundesland_abbrev = bundeslandLookup(bundesland_key)
 
@@ -93,14 +140,15 @@ with open("../data/destatis_auszug_gv2q_2020-06-30.csv", mode='r', encoding="utf
         demographics_row = {
             "ID": line_count, "COUNTY": line_count,
             "NAME": gemeindename, "STNAME": bundesland_name,
-            "POPESTIMATE2015": row["Bevoelkerung_Gesamt"],
             "CTYNAME": gemeindename,
-            "TOT_POP": row["Bevoelkerung_Gesamt"],
-            "TOT_MALE": row["Bevoelkerung_Maennlich"],
-            "TOT_FEMALE": row["Bevoelkerung_Weiblich"]
         }
+
+        demographics_row.update(generate_population_demographics(row))
         demographics_row.update(generate_random_demographics(demographics_ethnic_group_header))
-        demographics_row.update(generate_random_demographics(demographics_age_group_header))
+        
+        vanilla_age_groups = population_statistics_dict[bundesland_name]
+        warped_age_groups = warp_population_statistics(population_statistics_numpy, bundesland_name)
+        demographics_row.update(warp_population_statistics(demographics_age_group_header))
         demographics_row.update(generate_random_demographics(demographics_income_group_header))
         demographics_row.update(generate_random_demographics(demographics_education_group_header))
 
