@@ -62,7 +62,7 @@ def bundeslandLookup(bundesland_key):
         "07": ("Rheinland-Pfalz", "RP"),
         "08": ("Baden-Württemberg", "BW"),
         "09": ("Bayern", "BY"),
-        "10": ("Saarland", "SN"),
+        "10": ("Saarland", "SL"),
         "11": ("Berlin", "BE"),
         "12": ("Brandenburg", "BB"),
         "13": ("Mecklenburg-Vorpommern", "MV"),
