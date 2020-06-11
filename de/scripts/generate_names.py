@@ -3,7 +3,7 @@ import yaml
 
 fieldnames = ["Name", "Count"]
 street_data = {
-    "type": ["Straße", "Str.", "Allee", "Weg"],
+    "type": ["-Straße", "-Str.", "Allee", "-Weg", "-Platz"],
     "secondary": ["Apartment", "Appartement", "Stockwerk"]
 }
 
