@@ -33,9 +33,13 @@ def dump_dict(d, indent=0):
         return f"{indent_string}{d}\n"
 
 
-def dump(filename, lang_key="english"):
+def dump(filename):
     with open(filename, "w", encoding="utf8") as target_file:
-        whole_dict = {lang_key: name_data, "street": street_data}
+        whole_dict = {
+            "english": name_data, 
+            "spanish": name_data,
+            "street": street_data
+        }
         d = dump_dict(whole_dict)
         target_file.write(d)
 
