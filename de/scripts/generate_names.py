@@ -3,7 +3,7 @@ import yaml
 
 fieldnames = ["Name", "Count"]
 street_data = {
-    "type": ["-Straße", "-Str.", "Allee", "-Weg", "-Platz"],
+    "type": ["-Straße", " Straße", "-Str.", " Allee", "-Weg", " Platz"],
     "secondary": ["Apartment", "Appartement", "Stockwerk"]
 }
 
@@ -51,9 +51,3 @@ if __name__ == "__main__":
     name_data["F"] = read_file_to("../data/names/female.csv")
 
     dump("../src/main/resources/names.yml")
-
-
-# with open("../data/names/family.csv", "r", encoding="utf8") as fam_file:
-#     fam_data = csv.DictReader(fam_file, fieldnames=fieldnames)
-#     print(fam_data)
-#     english_data["family"] = [f["Name"] for f in fam_data]
