@@ -116,8 +116,8 @@ if __name__ == "__main__":
     population_statistics_dict = read_population_statistics(demographics_age_group_header, representation="dict")
 
     with open("../data/destatis_auszug_gv2q_2020-06-30.csv", mode='r', encoding="utf8") as source_file, \
-            open("../src/main/resources/geography/zipcodes.csv", mode='w', newline='', encoding="utf8") as zipcode_file, \
-            open("../src/main/resources/geography/demographics.csv", mode='w', newline='', encoding="utf8") as demographics_file:
+            open("../src/main/resources/geography/zipcodes-de.csv", mode='w', newline='', encoding="utf8") as zipcode_file, \
+            open("../src/main/resources/geography/demographics-de.csv", mode='w', newline='', encoding="utf8") as demographics_file:
 
         source_reader = csv.DictReader(source_file, delimiter=',')
         zip_writer = csv.DictWriter(
@@ -150,8 +150,8 @@ if __name__ == "__main__":
                 bundesland_abbrev,
                 gemeindename,
                 row["PLZ"],
-                row["Laengengrad"].replace(",", "."),
-                row["Breitengrad"].replace(",", "."),
+                float(row["Breitengrad"].replace(",", ".")),
+                float(row["Laengengrad"].replace(",", ".")),
             ])}
             zip_writer.writerow(zip_row)
 
