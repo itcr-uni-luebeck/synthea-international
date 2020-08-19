@@ -27,7 +27,7 @@ def dump_dict(d, indent=0):
                 output += "\n" + dump_dict(v, indent=indent+2)
                 output += "\n"
             else:
-                output += f" {v}\n"   
+                output += f" {v}\n"
         return output
     else:
         return f"{indent_string}{d}\n"
@@ -36,7 +36,7 @@ def dump_dict(d, indent=0):
 def dump(filename):
     with open(filename, "w", encoding="utf8") as target_file:
         whole_dict = {
-            "english": name_data, 
+            "english": name_data,
             "spanish": name_data,
             "street": street_data
         }
@@ -50,4 +50,4 @@ if __name__ == "__main__":
     name_data["M"] = read_file_to("../data/names/male.csv")
     name_data["F"] = read_file_to("../data/names/female.csv")
 
-    dump("../src/main/resources/names.yml")
+    dump("../src/main/resources/names-de.yml")

@@ -13,7 +13,7 @@ id,name,address,city,state,zip,phone,ownership,emergency,quality,LAT,LON,type,EB
 11012,Universitätsklinikum Köln,Kerpener Straße 62,Köln,NW,50937,,,Yes,,50.925188649999996,6.920014982951278,VA Facility,,,,,,,,,
 11013,Charité – Universitätsmedizin Berlin,Charitéplatz 1,Berlin,BE,10117,,,Yes,,52.526667,13.379722,VA Facility,,,,,,,,,
 11014,Universitätsklinikum Münster,Albert-Schweitzer-Campus 1,Münster,NW,48143,,,Yes,,51.960550999999995,7.596033481861085,VA Facility,,,,,,,,,
-11015,Universitätsklinikum Erlangen,"Maximilianspl. 2 ",Erlangen,BY,91054,,,Yes,,49.6005848,11.010689404503191,VA Facility,,,,,,,,,
+11015,Universitätsklinikum Erlangen,Maximilianspl. 2 ,Erlangen,BY,91054,,,Yes,,49.6005848,11.010689404503191,VA Facility,,,,,,,,,
 11016,Universitätsklinikum Frankfurt,Theodor-Stern-Kai 7,Frankfurt am Main,HE,60590,,,Yes,,50.0958799,8.659323,VA Facility,,,,,,,,,
 11017,Universitätsklinikum Freiburg,Hugstetter Str. 55,Freiburg im Breisgau,BW,79104,,,Yes,,48.0072368,7.837299678509096,VA Facility,,,,,,,,,
 11018,Universitätsklinikum Gießen/Marburg,Baldingerstraße,Marburg,HE,35043,,,Yes,,50.57518705,8.665508502521151,VA Facility,,,,,,,,,
